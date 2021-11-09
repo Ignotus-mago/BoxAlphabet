@@ -1,6 +1,8 @@
 /**
  * BoxAlphabet
  * @author Paul Hertz
+ * https://paulhertz.net/
+ *
  * Generates and displays a 26-character graphic alphabet using a 7x7 grid. 
  * All characters consist of at most two rectangles superimposed on a background square.
  * Generates and displays a text created from these letterforms. 
@@ -13,6 +15,13 @@
  * element in the library has a draw() command. For AI files, there's also a write() command. Both commands 
  * cascade down the tree when called on a document, layer, or group object. This can make drawing pretty simple.
  * Shapes, groups and layers can also be hidden or shown. 
+ *
+ * Since this software involves the sort of content that sometimes is subject to legal battles, namely, a font, 
+ * I am releasing it under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Internation license, 
+ * (CC BY-NC-SA 4.0, https://creativecommons.org/licenses/by-nc-sa/4.0/). 
+ * 
+ * This software is free for non-commercial use, please share any mods with the same license. I would also really 
+ * appreciate it if you notify me if you use it in artworks or other public contexts.
  *
  */
 
