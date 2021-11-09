@@ -1,3 +1,11 @@
+/**
+ * Loads the boxList HashMap with keys and values.
+ * Keys are uppercase letters of the alphabet, values are coordinates of rectangles
+ * that create the letterforms, in (top, left, width, height) format. The first four
+ * coordinates belong to the background rectangle. The next 4 or 8 coordinates
+ * belong to foreground rectangles. The characters consist of just 2 or 3 rectangles. 
+ *
+ */
 public void initBoxAlpha() {
   boxList = new HashMap<String, IntList>();
   boxList.put("A", new IntList(0,0,7,7,0,1,6,2,0,4,6,3));
