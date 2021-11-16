@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import processing.pdf.*;
 
 HashMap<String, IntList> boxList;
+color backgroundColor = color(144, 157, 186);
 color alphaBackColor1;
 color alphaBackColor2;
 color alphaForeColor1;
@@ -76,18 +77,20 @@ public void setupGeometry() {
   alphaBackColor2 = color(254, 246, 233);
   alphaForeColor1 = color(199, 34, 42);
   alphaForeColor2 = color(55, 89, 144);
-  spaceColor1 = color(254, 199, 21);
-  spaceColor2 = color(233, 178, 34);
+  //spaceColor1 = color(254, 199, 21);
+  //spaceColor2 = color(233, 178, 34);
+  spaceColor1 = backgroundColor;
+  spaceColor2 = backgroundColor;
   String msg;
-  msg = "Oblivion is not to be hired: The greater part must be content to be as though they had not been," 
-    + "to be found in the Register of God, not in the record of man. Twenty seven Names make up the first story," 
-    + "and the recorded names ever since contain not one living Century. The number of the dead long exceedeth" 
-    + "all that shall live. The night of time far surpasseth the day, and who knows when was the Equinox?" 
+  msg = "Oblivion is not to be hired: The greater part must be content to be as though they had not been, " 
+    + "to be found in the Register of God, not in the record of man. Twenty seven Names make up the first story, " 
+    + "and the recorded names ever since contain not one living Century. The number of the dead long exceedeth " 
+    + "all that shall live. The night of time far surpasseth the day, and who knows when was the Equinox? " 
     + "Every houre addes unto that current Arithmetique, which scarce stands one moment. And since death must be the " 
-    + "Lucina of life, and even Pagans could doubt whether thus to live, were to dye. Since our longest" 
-    + "Sunne sets at right descensions, and makes but winter arches, and therefore it cannot be long before" 
-    + "we lie down in darknesse, and have our lights in ashes. Since the brother of death daily haunts us" 
-    + "with dying mementos, and time that grows old it self, bids us hope no long duration: Diuturnity i" 
+    + "Lucina of life, and even Pagans could doubt whether thus to live, were to dye. Since our longest " 
+    + "Sunne sets at right descensions, and makes but winter arches, and therefore it cannot be long before " 
+    + "we lie down in darknesse, and have our lights in ashes. Since the brother of death daily haunts us " 
+    + "with dying mementos, and time that grows old it self, bids us hope no long duration: Diuturnity is " 
     + "a dream and folly of expectation.";
   messageGroup = loadMessage(msg);
 }
@@ -101,7 +104,7 @@ public void showHelp() {
 
 
 public void draw() {
-  background(144, 157, 186);
+  background(backgroundColor);
   alphaGroup.draw();
   messageGroup.draw();
 }
@@ -176,7 +179,7 @@ public GroupComponent loadMessage(String mess) {
   float xinc = scaleXY * 7;
   float ty = startY;
   float yinc = scaleXY * 7;
-  int breakWord = 9;
+  int breakWord = 8;
   int charCount = 0;
   GroupComponent g;
   GroupComponent messGroup = new GroupComponent();
