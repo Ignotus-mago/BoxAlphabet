@@ -1,4 +1,4 @@
-/**
+ /**
  * BoxAlphabet
  * @author Paul Hertz
  * https://paulhertz.net/
@@ -35,13 +35,14 @@ import java.util.regex.Pattern;
 import processing.pdf.*;
 
 HashMap<String, IntList> boxList;
-color backgroundColor = color(144, 157, 186);
+color backgroundColor = color(254, 246, 233);
 color alphaBackColor1;
 color alphaBackColor2;
 color alphaForeColor1;
 color alphaForeColor2;
 color spaceColor1;
 color spaceColor2;
+String msg;
 int sxy = 8;
 int d = 64;
 boolean testing = false;
@@ -67,6 +68,7 @@ public void setup() {
  * Sets colors and loads geometry into the alphaGroup and messageGroup. 
  */
 public void setupGeometry() {
+  backgroundColor = color(123, 110, 144);
   alphaBackColor1 = color(21, 34, 55);
   alphaBackColor2 = color(89, 110, 233);
   alphaForeColor1 = color(233, 233, 47);
@@ -75,13 +77,16 @@ public void setupGeometry() {
   alphaGroup.hide();
   alphaBackColor1 = color(254, 251, 246);
   alphaBackColor2 = color(254, 246, 233);
-  alphaForeColor1 = color(199, 34, 42);
-  alphaForeColor2 = color(55, 89, 144);
-  //spaceColor1 = color(254, 199, 21);
-  //spaceColor2 = color(233, 178, 34);
-  spaceColor1 = backgroundColor;
-  spaceColor2 = backgroundColor;
-  String msg;
+  alphaBackColor2 = alphaBackColor1;
+  alphaForeColor1 = color(8, 13, 21);
+  alphaForeColor2 = color(246, 233, 241);
+ //alphaForeColor1 = alphaForeColor2;
+ float brighter = 1.75;
+  spaceColor1 = color(123, 110, 144);
+  spaceColor2 = spaceColor1;
+  //spaceColor1 = backgroundColor;
+  //spaceColor2 = backgroundColor;
+  /*
   msg = "Oblivion is not to be hired: The greater part must be content to be as though they had not been, " 
     + "to be found in the Register of God, not in the record of man. Twenty seven Names make up the first story, " 
     + "and the recorded names ever since contain not one living Century. The number of the dead long exceedeth " 
@@ -92,7 +97,23 @@ public void setupGeometry() {
     + "we lie down in darknesse, and have our lights in ashes. Since the brother of death daily haunts us " 
     + "with dying mementos, and time that grows old it self, bids us hope no long duration: Diuturnity is " 
     + "a dream and folly of expectation.";
-  messageGroup = loadMessage(msg);
+  */
+  
+  msg = "This Reticulate or Net-work was also considerable in the inward parts of man, not only from the first subtegmen "
+    + "or warp of his formation, but in the netty fibres of the veins and vessels of life; wherein according to common "
+    + "Anatomy the right and transverse fibres are decussated, by the oblique fibres; and so must frame a Reticulate and "
+    + "Quincunciall Figure by their Obliquations, Emphatically extending that Elegant expression of Scripture, Thou hast "
+    + "curiously embroydered me, thou hast wrought me up after the finest way of texture, and as it were with a Needle";
+  /*
+  msg = "Light that makes things seen, makes some things invisible, were it not for darknesse and the shadow of the earth, "
+    + "the noblest part of the Creation had remained unseen, and the Stars in heaven as invisible as on the fourth day, "
+    + "when they were created above the Horizon, with the Sun, or there was not an eye to behold them.";
+  msg = " Five miles meandering with a mazy motion Through wood and dale the sacred river ran, Then reached the caverns measureless to man, "
+    + "And sank in tumult to a lifeless ocean; And ’mid this tumult Kubla heard from far Ancestral voices prophesying war!";
+  */
+  // msg = "Happy Birthday";
+  println("\nMessage:\n"+ msg +"\n");
+  messageGroup = loadMessageJustified(msg);
 }
 
 
@@ -127,6 +148,9 @@ public void keyPressed() {
   else if (key == 'p' || key == 'P') {
     println("----->>> SAVING PDF");
     savePDF("message+alphabet.pdf");
+  }
+  else if (key == 'j' || key == 'J') {
+    messageGroup = loadMessageJustified(msg);
   }
 }
 
@@ -171,15 +195,16 @@ public GroupComponent loadAlphabet() {
  * @return geometry wrapped in a GroupComponent     
  */
 public GroupComponent loadMessage(String mess) {
+  int[] colorValues = {233, 212, 220, 89, 76, 68};
   String[] words = mess.toUpperCase().split(" ");
   float startX = 32;
-  float startY = 64;
-  float scaleXY = sxy * 0.5;
+  float startY = 32;
+  float scaleXY = sxy * 0.825;
   float tx = startX;
-  float xinc = scaleXY * 7;
+  float xinc = scaleXY * 6;
   float ty = startY;
-  float yinc = scaleXY * 7;
-  int breakWord = 8;
+  float yinc = scaleXY * 6;
+  int breakWord = 12;
   int charCount = 0;
   GroupComponent g;
   GroupComponent messGroup = new GroupComponent();
@@ -206,6 +231,7 @@ public GroupComponent loadMessage(String mess) {
       IntList letter = boxList.get(" ");
       // alternate colors
       color c1 = charCount % 2 == 0 ? spaceColor1 : spaceColor2;
+      //color c1 = Palette.randColor(colorValues);
       color c2 = charCount % 2 == 0 ? alphaBackColor1 : alphaBackColor2;
       charCount++;
       g = loadChar(letter, scaleXY, tx, ty, c2, c1);
@@ -236,80 +262,82 @@ public GroupComponent loadMessage(String mess) {
 
 
 /** 
- * Generates geometry for an individual letterform in our graphical alphabet.
+ * Generates geometry for a graphical representation of the supplied String and
+ * returns it wrapped in a GroupComponent. 
  *
- * @param letter    an IntList of coordinate values (see initBoxAlpha())
- * @param scaleXY   scaling factor for geometry
- * @param tx        x-axis translation, pixels
- * @param ty        y-axis translation, pixels
+ * This version of the method uses the same number of characters in each line.
  *
- * @return          geometry of a single letterform wrapped in a GroupComponent
+ * @param  mess   the String to be encoded as geometry
+ * @return geometry wrapped in a GroupComponent     
  */
-public GroupComponent loadChar(IntList letter, float scaleXY, float tx, float ty) {
-  int[] coords = letter.array();
-  int i = 0;
-  GroupComponent g = new GroupComponent();
-  BezRectangle r0 = BezRectangle.makeLeftTopWidthHeight(coords[i++], coords[i++], coords[i++], coords[i++]);
-  r0.setNoStroke();
-  r0.setFillColor(alphaBackColor1);
-  r0.scaleShape(scaleXY, 0, 0);
-  r0.translateShape(tx, ty);
-  g.add(r0);
-  BezRectangle r1 = BezRectangle.makeLeftTopWidthHeight(coords[i++], coords[i++], coords[i++], coords[i++]);
-  r1.setNoStroke();
-  r1.setFillColor(alphaForeColor1);
-  r1.scaleShape(scaleXY, 0, 0);
-  r1.translateShape(tx, ty);
-  g.add(r1);
-  if (coords.length == 12) {
-    BezRectangle r2 = BezRectangle.makeLeftTopWidthHeight(coords[i++], coords[i++], coords[i++], coords[i++]);
-    r2.setNoStroke();
-    r2.setFillColor(alphaForeColor1);
-    r2.scaleShape(scaleXY, 0, 0);
-    r2.translateShape(tx, ty);
-    g.add(r2);
+public GroupComponent loadMessageJustified(String mess) {
+  int[] mid = {110, 123, 144, 157, 165, 178};
+  int[] light = {178, 186, 199, 220, 233};
+  int[] colorValues = {21, 34, 47, 55, 76, 89, 178, 186, 199, 220, 233};
+  String[] words = mess.toUpperCase().split(" ");
+  float startX = 32;
+  float startY = 32;
+  float scaleXY = sxy * 0.5;
+  float tx = startX;
+  float xinc = scaleXY * 7.25;
+  float ty = startY;
+  float yinc = scaleXY * 7.25;
+  // letters per line
+  int breakWord = 22;
+  int charCount = 0;
+  GroupComponent g;
+  GroupComponent messGroup = new GroupComponent();
+  Pattern pattern = Pattern.compile("[A-Z]+");
+  StringBuffer buf = new StringBuffer(mess.length()); 
+  for (int i = 0; i < words.length; i++) {
+    String src = words[i];
+    Matcher matcher = pattern.matcher(src);
+    if (matcher.find()) {
+      String word = matcher.group();
+      if (testing) println(word);
+      buf.append(word + " ");
+    }
   }
-  return g;
-}
-
-
-/** 
- * Generates geometry for an individual letterform in our graphical alphabet using supplied colors.
- *
- * @param letter    an IntList of coordinate values (@see initBoxAlpha())
- * @param scaleXY   scaling factor for geometry
- * @param tx        x-axis translation, pixels
- * @param ty        y-axis translation, pixels
- * @param bg        background color
- * @param fg        foreground color
- *
- * @return          geometry of a single letterform wrapped in a GroupComponent
- */
-public GroupComponent loadChar(IntList letter, float scaleXY, float tx, float ty, color bg, color fg) {
-  int[] coords = letter.array();
-  int i = 0;
-  GroupComponent g = new GroupComponent();
-  BezRectangle r0 = BezRectangle.makeLeftTopWidthHeight(coords[i++], coords[i++], coords[i++], coords[i++]);
-  r0.setNoStroke();
-  r0.setFillColor(bg);
-  r0.scaleShape(scaleXY, 0, 0);
-  r0.translateShape(tx, ty);
-  g.add(r0);
-  BezRectangle r1 = BezRectangle.makeLeftTopWidthHeight(coords[i++], coords[i++], coords[i++], coords[i++]);
-  r1.setNoStroke();
-  r1.setFillColor(fg);
-  r1.scaleShape(scaleXY, 0, 0);
-  r1.translateShape(tx, ty);
-  g.add(r1);
-  if (coords.length == 12) {
-    BezRectangle r2 = BezRectangle.makeLeftTopWidthHeight(coords[i++], coords[i++], coords[i++], coords[i++]);
-    r2.setNoStroke();
-    r2.setFillColor(fg);
-    r2.scaleShape(scaleXY, 0, 0);
-    r2.translateShape(tx, ty);
-    g.add(r2);
+  color c1, c2, cNext;
+  cNext = Palette.randColor(colorValues);
+  c1 = cNext;
+  for (int i = 0; i < buf.length(); i++) {
+    IntList letter = boxList.get(str(buf.charAt(i)));
+    // alternate colors
+    c2 = i % 2 == 0 ? alphaForeColor1 : alphaForeColor2;
+    if (' ' == buf.charAt(i)) {
+      c1 = spaceColor2;
+    }
+    else {
+      c1 = i % 2 == 0 ? Palette.randColor(light) : Palette.randColor(mid);
+      //c1 = cNext;
+      //cNext = Palette.randColor(colorValues);
+    }
+    charCount++;
+    g = loadChar(letter, scaleXY, tx, ty, c2, c1);
+    messGroup.add(g);
+    tx += xinc;
+    if (charCount % breakWord == 0) {
+      // start a new line of text
+      tx = startX;
+      ty += yinc;
+      // swap colors for checkerboard pattern
+      int temp = alphaBackColor1;
+      alphaBackColor1 = alphaBackColor2;
+      alphaBackColor2 = temp;
+      temp = alphaForeColor1;
+      alphaForeColor1 = alphaForeColor2;
+      alphaForeColor2 = temp;
+      temp = spaceColor1;
+      spaceColor1 = spaceColor2;
+      spaceColor2 = temp;
+      // cNext = Palette.randColor(colorValues);
+      int[] temparr = light;
+      mid = light;
+      light = temparr;
+    }
   }
-  return g;
+  return messGroup;
 }
 
 
