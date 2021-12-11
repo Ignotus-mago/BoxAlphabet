@@ -59,16 +59,17 @@ class GlyphGenerator {
   float xctr;
   float yctr;
 
+
   public GlyphGenerator(float x, float y, float w, float h, float u) {
     this.lx = x;
     this.ty = y;
     this.w = w;
     this.h = h;
     this.u = u;
-    calculatePoints(x, y, w, h, u);
+    calculatePoints();
   }
 
-  public void calculatePoints(float x, float y, float w, float h, float u) {
+  public void calculatePoints() {
     this.lu = lx + u;
     this.lm = lx + (w - u) / 2;
     this.rm = lx + (w + u) / 2;
@@ -83,34 +84,23 @@ class GlyphGenerator {
     this.yctr = ty + h / 2;
   }
 
-  // Changing any of these values should be followed by a call to calculatePoints
-  public void setLx(float newLx) {
-    this.lx = newLx;
+  // Changing any of the initial values should be followed by a call to calculatePoints
+  public void regenerate(float x, float y, float w, float h, float u) {
+    this.lx = x;
+    this.ty = y;
+    this.w = w;
+    this.h = h;
+    this.u = u;
+    calculatePoints();
   }
-
-  public void setTy(float newTy) {
-    this.ty = newTy;
-  }
-
-  public void setW(float newW) {
-    this.w = newW;
-  }
-
-  public void setH(float newH) {
-    this.h = newH;
-  }
-
-  public void setU(float newU) {
-    this.u = newU;
-  }
-
+  
 
   public GlyphShape getGlyph(Glyph glyph, boolean rot90) {
     GlyphShape gs;
     switch (glyph) {
     case T:
       if (!rot90) {
-        gs = makeGlyphShape(Glyph.T, new IntList(lx, ty, rx, by, lx, tu, rm, by, rm, tu, rx, by));
+        gs = makeGlyphShape(Glyph.T, new IntList(lx, ty, rx, by, lx, tu, lm, by, rm, tu, rx, by));
       }
       else {
         gs = makeGlyphShape(Glyph.T, new IntList(lx, ty, rx, by, lx, ty, ru, tm, lx, bm, ru, by));
@@ -118,32 +108,67 @@ class GlyphGenerator {
       break;
     case Z:
       if (!rot90) {
-        gs = makeGlyphShape(Glyph.Z, new IntList(lx, ty, rx, by, lx, tu, rm, by, rm, ty, rx, bu));
+        gs = makeGlyphShape(Glyph.Z, new IntList(lx, ty, rx, by, lx, tu, lm, by, rm, ty, rx, bu));
       }
       else {
         gs = makeGlyphShape(Glyph.Z, new IntList(lx, ty, rx, by, lx, ty, ru, tm, lu, bm, rx, by));
       }
       break;
     case M:
-      gs = makeGlyphShape(Glyph.M, new IntList(lx, ty, rx, by, lu, tu, lm, by, rm, tu, ru, by));
+      if (!rot90) {
+        gs = makeGlyphShape(Glyph.M, new IntList(lx, ty, rx, by, lu, tu, lm, by, rm, tu, ru, by));
+      }
+      else {
+        gs = makeGlyphShape(Glyph.M, new IntList(lx, ty, rx, by, lx, tu, ru, tm, lx, bm, ru, bu));        
+      }
       break;
     case F:
-      gs = makeGlyphShape(Glyph.F, new IntList(lx, ty, rx, by, lu, tu, rx, tm, lu, bm, rx, by));
+      if (!rot90) {
+        gs = makeGlyphShape(Glyph.F, new IntList(lx, ty, rx, by, lu, tu, rx, tm, lu, bm, rx, by));
+      }
+      else {
+        gs = makeGlyphShape(Glyph.F, new IntList(lx, ty, rx, by, rm, tu, ru, by, lx, tu, lm, by));
+      }
       break;
     case Y:
-      gs = makeGlyphShape(Glyph.Y, new IntList(lx, ty, rx, by, lu, ty, ru, tm, lx, bm, ru, bu));
+      if (!rot90) {
+        gs = makeGlyphShape(Glyph.Y, new IntList(lx, ty, rx, by, lu, ty, ru, tm, lx, bm, ru, bu));
+      }
+      else {
+        gs = makeGlyphShape(Glyph.Y, new IntList(lx, ty, rx, by, rm, tu, rx, bu, lu, ty, lm, bu));
+      }
       break;
     case P:
-      gs = makeGlyphShape(Glyph.P, new IntList(lx, ty, rx, by, lx, tu, ru, tm, lu, bm, rx, by));
+      if (!rot90) {
+        gs = makeGlyphShape(Glyph.P, new IntList(lx, ty, rx, by, lx, tu, ru, tm, lu, bm, rx, by));
+      }
+      else {
+        gs = makeGlyphShape(Glyph.P, new IntList(lx, ty, rx, by, rm, ty, ru, bu, lx, tu, lm, by));
+      }
       break;
     case Q:
-      gs = makeGlyphShape(Glyph.Q, new IntList(lx, ty, rx, by, lx, tu, lm, bu, rm, ty, rx, bu));
+      if (!rot90) {
+        gs = makeGlyphShape(Glyph.Q, new IntList(lx, ty, rx, by, lx, tu, lm, bu, rm, ty, rx, bu));
+      }
+      else {
+        gs = makeGlyphShape(Glyph.Q, new IntList(lx, ty, rx, by, lu, ty, ru, tm, lu, bm, rx, by));
+      }
       break;
     case S:
-      gs = makeGlyphShape(Glyph.S, new IntList(lx, ty, rx, by, lu, tu, rx, tm, lx, bm, ru, bu));
+      if (!rot90) {
+        gs = makeGlyphShape(Glyph.S, new IntList(lx, ty, rx, by, lu, tu, rx, tm, lx, bm, ru, bu));
+      }
+      else {
+        gs = makeGlyphShape(Glyph.S, new IntList(lx, ty, rx, by, rm, tu, ru, by, lu, ty, lm, bu));
+      }
       break;
     case H:
-      gs = makeGlyphShape(Glyph.H, new IntList(lx, ty, rx, by, lu, ty, ru, tm, lu, bm, ru, by));
+      if (!rot90) {
+        gs = makeGlyphShape(Glyph.H, new IntList(lx, ty, rx, by, lu, ty, ru, tm, lu, bm, ru, by));
+      }
+      else {
+        gs = makeGlyphShape(Glyph.H, new IntList(lx, ty, rx, by, rm, tu, rx, bu, lx, tu, lm, bu));
+      }
       break;
     default:
       gs = makeGlyphShape(Glyph.T, new IntList(lx, ty, rx, by, lx, tu, rm, by, rm, tu, rx, by));
@@ -153,7 +178,6 @@ class GlyphGenerator {
   }
 
   public GlyphShape makeGlyphShape(Glyph glyph, IntList coords) {
-    int i = 0;
     GlyphShape gs = new GlyphShape(glyph, coords);
     return gs;
   }
@@ -174,12 +198,12 @@ public class GlyphShape {
   public GlyphShape(Glyph glyph, BezRectangle r0, BezRectangle r1, BezRectangle r2) {
     this.glyph = glyph;
     this.r0 = r0;
-    this.r1 = r1;
-    this.r2 = r2;
+    if (null != r1) this.r1 = r1;
+    if (null != r2) this.r2 = r2;
     this.g = new GroupComponent();
     g.add(r0);
-    g.add(r1);
-    g.add(r2);
+    if (null != r1) g.add(r1);
+    if (null != r2) g.add(r2);
   }
   
   public GlyphShape(Glyph glyph, IntList coords) {
@@ -213,10 +237,11 @@ public class GlyphShape {
     return this.r2;
   }
 
-  public void setColors(color c0, color c1, color c2) {
+  public GlyphShape setFillColors(color c0, color c1, color c2) {
     r0.setFillColor(c0);
     if (null != r1) r1.setFillColor(c1);
     if (null != r2) r2.setFillColor(c2);
+    return this;
   }
 
   public void setGlyphBackColor(color c) {
@@ -228,15 +253,78 @@ public class GlyphShape {
     if (null != r2) r2.setFillColor(c);
   }
   
-  public void setNoStroke() {
+  public GlyphShape setNoStroke() {
     r0.setNoStroke();
     if (null != r1) r1.setNoStroke();
     if (null != r2) r2.setNoStroke();
+    return this;
   }
   
   public void draw() {
     this.g.draw();
   }
+  
+  public void transform(Matrix3 m) {
+    this.g.transform(m);
+  }
+  
+  public void rotateGlyph(float ang) {
+    float xctr = r0.getCenterPoint().x();
+    float yctr = r0.getCenterPoint().y();
+    Matrix3 m = new Matrix3();
+    m.translateCTM(-xctr, -yctr);
+    m.rotateCTM(ang);
+    m.translateCTM(xctr, yctr);
+    g.transform(m);
+  }
+
+  
+  public void rotate180() {
+    float xctr = r0.getCenterPoint().x();
+    float yctr = r0.getCenterPoint().y();
+    Matrix3 m = new Matrix3();
+    m.translateCTM(-xctr, -yctr);
+    m.rotateCTM(PI);
+    m.translateCTM(xctr, yctr);
+    g.transform(m);
+  }
+  
+  public void flipH() {
+    float xctr = r0.getCenterPoint().x();
+    float yctr = r0.getCenterPoint().y();
+    Matrix3 m = new Matrix3();
+    m.translateCTM(-xctr, -yctr);
+    m.reflectCTM(true);
+    m.translateCTM(xctr, yctr);
+    g.transform(m);
+  }
+  
+  public void flipV() {
+    float xctr = r0.getCenterPoint().x();
+    float yctr = r0.getCenterPoint().y();
+    Matrix3 m = new Matrix3();
+    m.translateCTM(-xctr, -yctr);
+    m.reflectCTM(false);
+    m.translateCTM(xctr, yctr);
+    g.transform(m);
+  }
+  
+  public void translate(float tx, float ty) {
+    Matrix3 m = new Matrix3();
+    m.translateCTM(tx, ty);
+    g.transform(m);
+  }
+  
+  public GlyphShape clone() {
+    BezRectangle newR0 = BezRectangle.makeRectangle(this.r0);
+    BezRectangle newR1 = null;
+    BezRectangle newR2 = null;
+    if (null != r1) newR1 = BezRectangle.makeRectangle(this.r1);
+    if (null != r2) newR2 = BezRectangle.makeRectangle(this.r2);
+    return new GlyphShape(this.glyph, newR0, newR1, newR2);    
+  }
+  
+  
 
   /**
    * Generates geometry for an individual letterform in our graphical alphabet
@@ -250,6 +338,7 @@ public class GlyphShape {
    * @param fg      foreground color
    *
    */
+  /*   
   public void loadChar(IntList letter, float scaleXY, float tx, float ty, color bg, color fg) {
     int[] coords = letter.array();
     int i = 0;
@@ -275,4 +364,6 @@ public class GlyphShape {
       g.add(r2);
     }
   }
+  */
+  
 }
