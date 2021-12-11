@@ -59,16 +59,16 @@ class GlyphGenerator {
   float xctr;
   float yctr;
 
-  public GlyphGenerator() {
-
-  }
-
-  public void calculatePoints(float x, float y, float w, float h, float u) {
+  public GlyphGenerator(float x, float y, float w, float h, float u) {
     this.lx = x;
     this.ty = y;
     this.w = w;
     this.h = h;
     this.u = u;
+    calculatePoints(x, y, w, h, u);
+  }
+
+  public void calculatePoints(float x, float y, float w, float h, float u) {
     this.lu = lx + u;
     this.lm = lx + (w - u) / 2;
     this.rm = lx + (w + u) / 2;
@@ -83,7 +83,7 @@ class GlyphGenerator {
     this.yctr = ty + h / 2;
   }
 
-  // Changing any of these values should be followed by a call to calculatePoints and generateGlyphs.
+  // Changing any of these values should be followed by a call to calculatePoints
   public void setLx(float newLx) {
     this.lx = newLx;
   }
@@ -104,30 +104,25 @@ class GlyphGenerator {
     this.u = newU;
   }
 
-  /*
-  private void generateGlyphs() {
-    this.glyphList = new HashMap<Glyph, GlyphShape>();
-    glyphList.put(Glyph.T, makeGlyphShape(Glyph.T, new IntList(lx, ty, rx, by, lx, tu, rm, by, rm, tu, rx, by)));
-    glyphList.put(Glyph.Z, makeGlyphShape(Glyph.Z, new IntList(lx, ty, rx, by, lx, tu, rm, by, rm, ty, rx, bu)));
-    glyphList.put(Glyph.M, makeGlyphShape(Glyph.M, new IntList(lx, ty, rx, by, lu, tu, lm, by, rm, tu, ru, by)));
-    glyphList.put(Glyph.F, makeGlyphShape(Glyph.F, new IntList(lx, ty, rx, by, lu, tu, rx, tm, lu, bm, rx, by)));
-    glyphList.put(Glyph.Y, makeGlyphShape(Glyph.Y, new IntList(lx, ty, rx, by, lu, ty, ru, tm, lx, bm, ru, bu)));  
-    glyphList.put(Glyph.P, makeGlyphShape(Glyph.P, new IntList(lx, ty, rx, by, lx, tu, ru, tm, lu, bm, rx, by)));
-    glyphList.put(Glyph.Q, makeGlyphShape(Glyph.Q, new IntList(lx, ty, rx, by, lx, tu, lm, bu, rm, ty, rx, bu)));
-    glyphList.put(Glyph.S, makeGlyphShape(Glyph.S, new IntList(lx, ty, rx, by, lu, tu, rx, tm, lx, bm, ru, bu)));
-    glyphList.put(Glyph.H, makeGlyphShape(Glyph.H, new IntList(lx, ty, rx, by, lu, ty, ru, tm, lu, bm, ru, by)));
-  }
-  */
 
-  public GlyphShape getGlyph(Glyph glyph, float x, float y, float w, float h, float u, int rotFlip) {
-    calculatePoints(x, y, w, h, u);
+  public GlyphShape getGlyph(Glyph glyph, boolean rot90) {
     GlyphShape gs;
     switch (glyph) {
     case T:
-      gs = makeGlyphShape(Glyph.T, new IntList(lx, ty, rx, by, lx, tu, rm, by, rm, tu, rx, by));
+      if (!rot90) {
+        gs = makeGlyphShape(Glyph.T, new IntList(lx, ty, rx, by, lx, tu, rm, by, rm, tu, rx, by));
+      }
+      else {
+        gs = makeGlyphShape(Glyph.T, new IntList(lx, ty, rx, by, lx, ty, ru, tm, lx, bm, ru, by));
+      }
       break;
     case Z:
-      gs = makeGlyphShape(Glyph.Z, new IntList(lx, ty, rx, by, lx, tu, rm, by, rm, ty, rx, bu));
+      if (!rot90) {
+        gs = makeGlyphShape(Glyph.Z, new IntList(lx, ty, rx, by, lx, tu, rm, by, rm, ty, rx, bu));
+      }
+      else {
+        gs = makeGlyphShape(Glyph.Z, new IntList(lx, ty, rx, by, lx, ty, ru, tm, lu, bm, rx, by));
+      }
       break;
     case M:
       gs = makeGlyphShape(Glyph.M, new IntList(lx, ty, rx, by, lu, tu, lm, by, rm, tu, ru, by));
