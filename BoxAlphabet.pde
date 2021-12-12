@@ -61,7 +61,7 @@ public void setup() {
   igno = new IgnoCodeLib(this);
   initBoxAlpha();
   setupGeometry();
-  glyphGroup = glyphTestTwo();
+  glyphGroup = glyphTestThree();
   showHelp();
 }
 
@@ -127,7 +127,7 @@ public void showHelp() {
 
 
 public void draw() {
-  background(backgroundColor);
+  background(255);
   alphaGroup.hide();
   messageGroup.hide();
   // alphaGroup.draw();
@@ -155,7 +155,7 @@ public void keyPressed() {
     saveGlyphsAI("glyphs.ai");
   } 
   else if (key == 'w' || key == 'W') {
-    glyphGroup = glyphTestTwo();
+    glyphGroup = glyphTestThree();
   } 
   else if (key == 'p' || key == 'P') {
     println("----->>> SAVING PDF");
@@ -353,6 +353,7 @@ public GroupComponent loadMessageJustified(String mess) {
 }
 
 
+// the ordered set of 9 glyphs in 8 rotations and reflections
 public GroupComponent glyphTestOne() {
   int c0 = color(13, 21, 34);
   int c1 = color(220, 220, 110);
@@ -383,13 +384,16 @@ public GroupComponent glyphTestOne() {
 }
 
 
+// random ordering of the 9 glyphs, each in 8 rotations and reflections
 public GroupComponent glyphTestTwo() {
   int c0 = color(#172536);
   int c1 = color(#E9C759);
   int c2 = color(#7BC7E9);
+  int[] mid = {110, 123, 144};
+  int[] light = {199, 220, 233};
   float x = 32;
   float y = 32;
-  float step = 97;
+  float step = 89;  // 76 for overlap, 97 for separation
   int i = 0;
   int j = 0;
   boolean r90 = false;
@@ -400,6 +404,8 @@ public GroupComponent glyphTestTwo() {
   // step through rotations and reflections, but without translation
   for (j = 0; j < 8; j++) {
     for (Glyph glyph : Glyph.values()) {
+      //c1 = Palette.randColor(mid);
+      //c2 = Palette.randColor(light);
       gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
       if (j%4 >= 2) gs.rotate180();
       if (j>=4) gs.flipV();
@@ -411,15 +417,82 @@ public GroupComponent glyphTestTwo() {
   // randomize the order of glyphs
   rand.shuffle((ArrayList)gsList);
   int lim = Glyph.values().length;
-  for (j = 0; j < 9; j++) {
-    for (i = 0; i < 8; i++) {
-      gs = gsList.get(j*8 + i);
+  for (j = 0; j < 8; j++) {
+    for (i = 0; i < lim; i++) {
+      gs = gsList.get(j*lim + i);
+      // println("----->>> "+ (j*lim+i) +": "+ gs.r0().getCenterPoint().x() +", "+ gs.r0().getCenterPoint().y() +"     (j = "+ j +", i = "+ i +")");
       gs.translate(step * i + x, step * j + y);
+      // println("----->>> "+ (j*lim+i) +": "+ gs.r0().getCenterPoint().x() +", "+ gs.r0().getCenterPoint().y() +"\n");
       g.add(gs.getGroup());
     }
   }
   return g;
 }
+
+// recursive patterns
+public GroupComponent glyphTestThree() {
+  GroupComponent g = new GroupComponent();
+  int c0 = color(13, 21, 34);
+  int c1 = color(220, 220, 110);
+  int c2 = color(110, 220, 233);
+  int[] mid = {110, 123, 144};
+  int[] light = {199, 220, 233};
+  RandUtil rand = new RandUtil();
+  ArrayList<Glyph> glyphList = new ArrayList<Glyph>();
+  for (Glyph glyph : Glyph.values()) {
+    glyphList.add(glyph);
+  }
+  // randomize the order of glyphs
+  rand.shuffle((ArrayList)glyphList);
+  int i = 0;
+  Glyph glyph = glyphList.get(i++);
+  float x = 32;
+  float y = 32;
+  float w = width - 6*x;
+  float h = height - 2*y;
+  // set u to 1/5 of width or height, whichever is smaller
+  float u = w <= h ? w/10 : h/10;
+  GlyphGenerator gen = new GlyphGenerator(x, y, w, h, u);
+  boolean r90 = w - h > glyph.zsign() ? true : false;
+  GlyphShape gs = gen.getGlyph(glyph, r90);
+  gs.setNoStroke();
+  gs.setFillColors(c0, c1, c2);
+  g.add(gs.getGroup());
+  //
+  c0 = Palette.randColor(mid);
+  BezRectangle r1 = gs.r1();
+  BezRectangle r2 = gs.r2();
+  x = r1.getLeft();
+  y = r1.getTop();
+  w = r1.getWidth();
+  h = r1.getHeight();
+  u = w <= h ? w/5 : h/5;
+  gen.regenerate(x, y, w, h, u);
+  glyph = glyphList.get(i++);
+  r90 =  w - h > glyph.zsign() ? true : false;
+  gs = gen.getGlyph(glyph, r90);
+  gs.setNoStroke();
+  gs.setFillColors(c0, c1, c2);
+  g.add(gs.getGroup());
+  //
+  x = r2.getLeft();
+  y = r2.getTop();
+  w = r2.getWidth();
+  h = r2.getHeight();
+  u = w <= h ? w/5 : h/5;
+  gen.regenerate(x, y, w, h, u);
+  glyph = glyphList.get(i++);
+  r90 =  w - h > glyph.zsign() ? true : false;
+  gs = gen.getGlyph(glyph, r90);
+  gs.setNoStroke();
+  gs.setFillColors(c0, c1, c2);
+  g.add(gs.getGroup());
+  //
+  return g;
+}
+
+
+
 
 
 /**
