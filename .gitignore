@@ -5,6 +5,12 @@
 *.war
 *.ear
 
+# graphics files #
+*.ai
+*.png
+*.psd
+*.jpg
+
 # OS generated files #
 ######################
 .DS_Store
