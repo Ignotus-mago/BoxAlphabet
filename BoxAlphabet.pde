@@ -61,7 +61,7 @@ public void setup() {
   igno = new IgnoCodeLib(this);
   initBoxAlpha();
   setupGeometry();
-  glyphGroup = glyphTestOne();
+  glyphGroup = glyphTestTwo();
   showHelp();
 }
 
@@ -128,6 +128,8 @@ public void showHelp() {
 
 public void draw() {
   background(backgroundColor);
+  alphaGroup.hide();
+  messageGroup.hide();
   // alphaGroup.draw();
   // messageGroup.draw();
   glyphGroup.draw();
@@ -147,6 +149,13 @@ public void keyPressed() {
   else if (key == 's' || key == 'S') {
     println("----->>> SAVING AI");
     saveAI("message+alphabet.ai");
+  } 
+  else if (key == 'g' || key == 'G') {
+    println("----->>> SAVING GLYPHS AI");
+    saveGlyphsAI("glyphs.ai");
+  } 
+  else if (key == 'w' || key == 'W') {
+    glyphGroup = glyphTestTwo();
   } 
   else if (key == 'p' || key == 'P') {
     println("----->>> SAVING PDF");
@@ -354,7 +363,6 @@ public GroupComponent glyphTestOne() {
   int i = 0;
   int j = 0;
   boolean r90 = false;
-  boolean flip = false;
   GroupComponent g = new GroupComponent();
   GlyphGenerator gen = new GlyphGenerator(0, 0, 89, 89, 13);
   GlyphShape gs;
@@ -371,102 +379,47 @@ public GroupComponent glyphTestOne() {
     }
     r90 = !r90;
   }
-  // the long way
-  /*
-  for (Glyph glyph : Glyph.values()) {
-    gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
-    gs.translate(step * i + x, step * j + y);
-    g.add(gs.getGroup());
-    i++;
-  }
-  i = 0;
-  j++;
-  r90 = true;
-  for (Glyph glyph : Glyph.values()) {
-    gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
-    gs.translate(step * i + x, step * j + y);
-    g.add(gs.getGroup());
-    i++;
-  }
-  i = 0;
-  j++;
-  r90 = false;
-  for (Glyph glyph : Glyph.values()) {
-    gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
-    gs.rotate180();
-    gs.translate(step * i + x, step * j + y);
-    g.add(gs.getGroup());
-    i++;
-  }
-  i = 0;
-  j++;
-  r90 = true;
-  for (Glyph glyph : Glyph.values()) {
-    gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
-    gs.rotate180();
-    gs.translate(step * i + x, step * j + y);
-    g.add(gs.getGroup());
-    i++;
-  }
-  // now reflect the same sequence
-  i = 0;
-  j++;
-  r90 = false;
-  for (Glyph glyph : Glyph.values()) {
-    gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
-    gs.flipV();
-    gs.translate(step * i + x, step * j + y);
-    g.add(gs.getGroup());
-    i++;
-  }
-  i = 0;
-  j++;
-  r90 = true;
-  for (Glyph glyph : Glyph.values()) {
-    gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
-    gs.flipV();
-    gs.translate(step * i + x, step * j + y);
-    g.add(gs.getGroup());
-    i++;
-  }
-  i = 0;
-  j++;
-  r90 = false;
-  for (Glyph glyph : Glyph.values()) {
-    gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
-    gs.rotate180();
-    gs.flipV();
-    gs.translate(step * i + x, step * j + y);
-    g.add(gs.getGroup());
-    i++;
-  }
-  i = 0;
-  j++;
-  r90 = true;
-  for (Glyph glyph : Glyph.values()) {
-    gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
-    gs.rotate180();
-    gs.flipV();
-    gs.translate(step * i + x, step * j + y);
-    g.add(gs.getGroup());
-    i++;
-  }
-  */
   return g;
 }
 
-//public GroupComponent glyphRow(GlyphGenerator gen, float x, float y, int row, int col, float step, boolean r90, boolean flip) {
-//  GroupComponent rowGroup = new GroupComponent();
-//  GlyphShape gs;
-//  for (Glyph glyph : Glyph.values()) {
-//    gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
-//    gs.rotate180();
-//    if (flip) gs.flipV();
-//    gs.translate(step * i + x, step * j + y);
-//    g.add(gs.getGroup());
-//    i++;
-//  }
-//}
+
+public GroupComponent glyphTestTwo() {
+  int c0 = color(#172536);
+  int c1 = color(#E9C759);
+  int c2 = color(#7BC7E9);
+  float x = 32;
+  float y = 32;
+  float step = 97;
+  int i = 0;
+  int j = 0;
+  boolean r90 = false;
+  GroupComponent g = new GroupComponent();
+  GlyphGenerator gen = new GlyphGenerator(0, 0, 89, 89, 13);
+  GlyphShape gs;
+  ArrayList<GlyphShape> gsList = new ArrayList<GlyphShape>();
+  // step through rotations and reflections, but without translation
+  for (j = 0; j < 8; j++) {
+    for (Glyph glyph : Glyph.values()) {
+      gs = gen.getGlyph(glyph, r90).setNoStroke().setFillColors(c0, c1, c2);
+      if (j%4 >= 2) gs.rotate180();
+      if (j>=4) gs.flipV();
+      gsList.add(gs);
+    }
+    r90 = !r90;
+  }
+  RandUtil rand = new RandUtil();
+  // randomize the order of glyphs
+  rand.shuffle((ArrayList)gsList);
+  int lim = Glyph.values().length;
+  for (j = 0; j < 9; j++) {
+    for (i = 0; i < 8; i++) {
+      gs = gsList.get(j*8 + i);
+      gs.translate(step * i + x, step * j + y);
+      g.add(gs.getGroup());
+    }
+  }
+  return g;
+}
 
 
 /**
@@ -501,6 +454,23 @@ private void saveAI(String aiFileName) {
   document.write(output);
   alphaGroup.setVisible(alphaIsVisible);
   messageGroup.setVisible(messageIsVisible);
+}
+
+private void saveGlyphsAI(String aiFileName) {
+  document = new DocumentComponent("Boxy Alphabet");
+  // get lots of feedback as we save
+  document.setVerbose(true);
+  document.setCreator("Ignotus");
+  document.setOrg("paulhertz.net");
+  document.setWidth(width);
+  document.setHeight(height);
+  Palette pal = document.getPalette();
+  pal.addBlackWhiteGray();
+  LayerComponent glyphLayer = new LayerComponent("Glyphs");
+  glyphLayer.add(glyphGroup);
+  document.add(glyphLayer);
+  PrintWriter output = createWriter(aiFileName);
+  document.write(output);
 }
 
 /**

@@ -207,6 +207,7 @@ public class GlyphShape {
   }
   
   public GlyphShape(Glyph glyph, IntList coords) {
+    this.glyph = glyph;
     this.g = new GroupComponent();
     int i = 0;
     r0 = BezRectangle.makeLeftTopRightBottom(coords.get(i++), coords.get(i++), coords.get(i++), coords.get(i++));
