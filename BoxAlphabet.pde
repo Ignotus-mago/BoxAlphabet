@@ -453,15 +453,19 @@ public GroupComponent glyphTestThree() {
   // set u to 1/5 of width or height, whichever is smaller
   float u = w <= h ? w/10 : h/10;
   GlyphGenerator gen = new GlyphGenerator(x, y, w, h, u);
-  boolean r90 = w - h > glyph.zsign() ? true : false;
+  boolean r90 = GeomUtils.zsgn(w - h) != glyph.zsign();
   GlyphShape gs = gen.getGlyph(glyph, r90);
   gs.setNoStroke();
   gs.setFillColors(c0, c1, c2);
+  gs.flipV();
+  // here's our problem: top, left, right, bottom are no longer accurate locations
+  println("----->>> r0: "+ gs.r0.getLeft(), gs.r0().getTop(), gs.r0().getRight(), gs.r0().getBottom());
   g.add(gs.getGroup());
   //
   c0 = Palette.randColor(mid);
-  BezRectangle r1 = gs.r1();
-  BezRectangle r2 = gs.r2();
+  // solution to our problem is to use the bounds rect, but we should fix the BezRectangle class update call, too
+  BezRectangle r1 = gs.r1().boundsRect();
+  BezRectangle r2 = gs.r2().boundsRect();
   x = r1.getLeft();
   y = r1.getTop();
   w = r1.getWidth();
@@ -469,10 +473,12 @@ public GroupComponent glyphTestThree() {
   u = w <= h ? w/5 : h/5;
   gen.regenerate(x, y, w, h, u);
   glyph = glyphList.get(i++);
-  r90 =  w - h > glyph.zsign() ? true : false;
+  r90 = GeomUtils.zsgn(w - h) != glyph.zsign();
   gs = gen.getGlyph(glyph, r90);
   gs.setNoStroke();
   gs.setFillColors(c0, c1, c2);
+  if (random(1) > 0.5) gs.rotate180();
+  if (random(1) > 0.5) gs.flipV();
   g.add(gs.getGroup());
   //
   x = r2.getLeft();
@@ -482,10 +488,12 @@ public GroupComponent glyphTestThree() {
   u = w <= h ? w/5 : h/5;
   gen.regenerate(x, y, w, h, u);
   glyph = glyphList.get(i++);
-  r90 =  w - h > glyph.zsign() ? true : false;
+  r90 = GeomUtils.zsgn(w - h) != glyph.zsign();
   gs = gen.getGlyph(glyph, r90);
   gs.setNoStroke();
   gs.setFillColors(c0, c1, c2);
+  if (random(1) > 0.75) gs.rotate180();
+  if (random(1) > 0.75) gs.flipV();
   g.add(gs.getGroup());
   //
   return g;
