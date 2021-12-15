@@ -1,4 +1,4 @@
- /**
+/**
  * BoxAlphabet
  * @author Paul Hertz
  * https://paulhertz.net/
@@ -31,6 +31,7 @@ import net.paulhertz.util.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Iterator;
 
 import processing.pdf.*;
 
@@ -44,10 +45,15 @@ color spaceColor1;
 color spaceColor2;
 String msg;
 int sxy = 8;
+float border = 16;
 int d = 64;
 boolean testing = false;
 
 IgnoCodeLib igno;
+
+// random utilities
+RandUtil rand;
+
 
 /** objects that organize our geometry */
 GroupComponent messageGroup;
@@ -59,9 +65,12 @@ DocumentComponent document;
 public void setup() {
   size(1024, 1024);
   igno = new IgnoCodeLib(this);
+  rand = new RandUtil();
   initBoxAlpha();
   setupGeometry();
-  glyphGroup = glyphTestThree();
+  glyphGroup = new GroupComponent();
+  border = 16;
+  loadGlyphGroup();
   showHelp();
 }
 
@@ -82,25 +91,25 @@ public void setupGeometry() {
   alphaBackColor2 = alphaBackColor1;
   alphaForeColor1 = color(8, 13, 21);
   alphaForeColor2 = color(246, 233, 241);
- //alphaForeColor1 = alphaForeColor2;
- float brighter = 1.75;
+  //alphaForeColor1 = alphaForeColor2;
+  float brighter = 1.75;
   spaceColor1 = color(123, 110, 144);
   spaceColor2 = spaceColor1;
   //spaceColor1 = backgroundColor;
   //spaceColor2 = backgroundColor;
   /*
   msg = "Oblivion is not to be hired: The greater part must be content to be as though they had not been, " 
-    + "to be found in the Register of God, not in the record of man. Twenty seven Names make up the first story, " 
-    + "and the recorded names ever since contain not one living Century. The number of the dead long exceedeth " 
-    + "all that shall live. The night of time far surpasseth the day, and who knows when was the Equinox? " 
-    + "Every houre addes unto that current Arithmetique, which scarce stands one moment. And since death must be the " 
-    + "Lucina of life, and even Pagans could doubt whether thus to live, were to dye. Since our longest " 
-    + "Sunne sets at right descensions, and makes but winter arches, and therefore it cannot be long before " 
-    + "we lie down in darknesse, and have our lights in ashes. Since the brother of death daily haunts us " 
-    + "with dying mementos, and time that grows old it self, bids us hope no long duration: Diuturnity is " 
-    + "a dream and folly of expectation.";
-  */
-  
+   + "to be found in the Register of God, not in the record of man. Twenty seven Names make up the first story, " 
+   + "and the recorded names ever since contain not one living Century. The number of the dead long exceedeth " 
+   + "all that shall live. The night of time far surpasseth the day, and who knows when was the Equinox? " 
+   + "Every houre addes unto that current Arithmetique, which scarce stands one moment. And since death must be the " 
+   + "Lucina of life, and even Pagans could doubt whether thus to live, were to dye. Since our longest " 
+   + "Sunne sets at right descensions, and makes but winter arches, and therefore it cannot be long before " 
+   + "we lie down in darknesse, and have our lights in ashes. Since the brother of death daily haunts us " 
+   + "with dying mementos, and time that grows old it self, bids us hope no long duration: Diuturnity is " 
+   + "a dream and folly of expectation.";
+   */
+
   msg = "This Reticulate or Net-work was also considerable in the inward parts of man, not only from the first subtegmen "
     + "or warp of his formation, but in the netty fibres of the veins and vessels of life; wherein according to common "
     + "Anatomy the right and transverse fibres are decussated, by the oblique fibres; and so must frame a Reticulate and "
@@ -108,14 +117,22 @@ public void setupGeometry() {
     + "curiously embroydered me, thou hast wrought me up after the finest way of texture, and as it were with a Needle";
   /*
   msg = "Light that makes things seen, makes some things invisible, were it not for darknesse and the shadow of the earth, "
-    + "the noblest part of the Creation had remained unseen, and the Stars in heaven as invisible as on the fourth day, "
-    + "when they were created above the Horizon, with the Sun, or there was not an eye to behold them.";
-  msg = " Five miles meandering with a mazy motion Through wood and dale the sacred river ran, Then reached the caverns measureless to man, "
-    + "And sank in tumult to a lifeless ocean; And ’mid this tumult Kubla heard from far Ancestral voices prophesying war!";
-  */
+   + "the noblest part of the Creation had remained unseen, and the Stars in heaven as invisible as on the fourth day, "
+   + "when they were created above the Horizon, with the Sun, or there was not an eye to behold them.";
+   msg = " Five miles meandering with a mazy motion Through wood and dale the sacred river ran, Then reached the caverns measureless to man, "
+   + "And sank in tumult to a lifeless ocean; And ’mid this tumult Kubla heard from far Ancestral voices prophesying war!";
+   */
   // msg = "Happy Birthday";
   println("\nMessage:\n"+ msg +"\n");
   messageGroup = loadMessageJustified(msg);
+}
+
+public void loadGlyphGroup() {
+    glyphGroup.children().clear();
+    glyphGroup.add(glyphTestThree(32, 32, 480, 480, border));
+    glyphGroup.add(glyphTestThree(32 + 480, 32, 480, 480, border));
+    glyphGroup.add(glyphTestThree(32 + 480, 32 + 480, 480, 480, border));
+    glyphGroup.add(glyphTestThree(32, 32 + 480, 480, 480, border));
 }
 
 
@@ -145,23 +162,18 @@ public void keyPressed() {
       alphaGroup.show();
       messageGroup.hide();
     }
-  } 
-  else if (key == 's' || key == 'S') {
+  } else if (key == 's' || key == 'S') {
     println("----->>> SAVING AI");
     saveAI("message+alphabet.ai");
-  } 
-  else if (key == 'g' || key == 'G') {
+  } else if (key == 'g' || key == 'G') {
     println("----->>> SAVING GLYPHS AI");
     saveGlyphsAI("glyphs.ai");
-  } 
-  else if (key == 'w' || key == 'W') {
-    glyphGroup = glyphTestThree();
-  } 
-  else if (key == 'p' || key == 'P') {
+  } else if (key == 'w' || key == 'W') {
+    loadGlyphGroup();
+  } else if (key == 'p' || key == 'P') {
     println("----->>> SAVING PDF");
     savePDF("message+alphabet.pdf");
-  }
-  else if (key == 'j' || key == 'J') {
+  } else if (key == 'j' || key == 'J') {
     messageGroup = loadMessageJustified(msg);
   }
 }
@@ -319,8 +331,7 @@ public GroupComponent loadMessageJustified(String mess) {
     c2 = i % 2 == 0 ? alphaForeColor1 : alphaForeColor2;
     if (' ' == buf.charAt(i)) {
       c1 = spaceColor2;
-    }
-    else {
+    } else {
       c1 = i % 2 == 0 ? Palette.randColor(light) : Palette.randColor(mid);
       //c1 = cNext;
       //cNext = Palette.randColor(colorValues);
@@ -430,28 +441,27 @@ public GroupComponent glyphTestTwo() {
 }
 
 // recursive patterns
-public GroupComponent glyphTestThree() {
+public GroupComponent glyphTestThree(float x, float y, float w, float h, float u) {
   GroupComponent g = new GroupComponent();
   int c0 = color(13, 21, 34);
   int c1 = color(220, 220, 110);
   int c2 = color(110, 220, 233);
+  int c3 = color(144, 157, 165);
+  int c4 = color(220, 144, 165);
   int[] mid = {110, 123, 144};
   int[] light = {199, 220, 233};
-  RandUtil rand = new RandUtil();
-  ArrayList<Glyph> glyphList = new ArrayList<Glyph>();
-  for (Glyph glyph : Glyph.values()) {
-    glyphList.add(glyph);
-  }
-  // randomize the order of glyphs
-  rand.shuffle((ArrayList)glyphList);
-  int i = 0;
-  Glyph glyph = glyphList.get(i++);
+  Glyph glyph;
+  Iterator<Glyph> glit = glyphIter();
+  glyph = nextGlyph(glit);
+  /*
   float x = 32;
   float y = 32;
   float w = width - 6*x;
   float h = height - 2*y;
-  // set u to 1/5 of width or height, whichever is smaller
-  float u = w <= h ? w/10 : h/10;
+  // set u to fraction of width or height, whichever is smaller
+  float u = w <= h ? w/12 : h/12;
+  u = border;
+  */
   GlyphGenerator gen = new GlyphGenerator(x, y, w, h, u);
   boolean r90 = GeomUtils.zsgn(w - h) != glyph.zsign();
   GlyphShape gs = gen.getGlyph(glyph, r90);
@@ -462,46 +472,144 @@ public GroupComponent glyphTestThree() {
   println("----->>> r0: "+ gs.r0.getLeft(), gs.r0().getTop(), gs.r0().getRight(), gs.r0().getBottom());
   g.add(gs.getGroup());
   //
-  c0 = Palette.randColor(mid);
-  // solution to our problem is to use the bounds rect, but we should fix the BezRectangle class update call, too
-  BezRectangle r1 = gs.r1().boundsRect();
-  BezRectangle r2 = gs.r2().boundsRect();
-  x = r1.getLeft();
-  y = r1.getTop();
-  w = r1.getWidth();
-  h = r1.getHeight();
-  u = w <= h ? w/5 : h/5;
-  gen.regenerate(x, y, w, h, u);
-  glyph = glyphList.get(i++);
-  r90 = GeomUtils.zsgn(w - h) != glyph.zsign();
-  gs = gen.getGlyph(glyph, r90);
-  gs.setNoStroke();
-  gs.setFillColors(c0, c1, c2);
-  if (random(1) > 0.5) gs.rotate180();
-  if (random(1) > 0.5) gs.flipV();
-  g.add(gs.getGroup());
-  //
-  x = r2.getLeft();
-  y = r2.getTop();
-  w = r2.getWidth();
-  h = r2.getHeight();
-  u = w <= h ? w/5 : h/5;
-  gen.regenerate(x, y, w, h, u);
-  glyph = glyphList.get(i++);
-  r90 = GeomUtils.zsgn(w - h) != glyph.zsign();
-  gs = gen.getGlyph(glyph, r90);
-  gs.setNoStroke();
-  gs.setFillColors(c0, c1, c2);
-  if (random(1) > 0.75) gs.rotate180();
-  if (random(1) > 0.75) gs.flipV();
-  g.add(gs.getGroup());
+  boolean isRecursed = false;
+  if (isRecursed) {
+    ArrayList<GlyphShape> gsList = new ArrayList<GlyphShape>();
+    gsList = reGlyphStep(gs, nextGlyph(glit), gen, new ArrayList<GlyphShape>(), 5);
+    for (int i = 0; i < gsList.size(); i++ ) {
+      g.add(gsList.get(i).getGroup());
+      println("----->>> gsList "+ i +": "+ gsList.get(i).getGlyph());
+    }
+  }
+  else {
+    c0 = Palette.randColor(mid);
+    // solution to our problem is to use the bounds rect, but we should fix the BezRectangle class usage, too 
+    BezRectangle r1 = gs.r1().boundsRect();
+    BezRectangle r2 = gs.r2().boundsRect();
+    gs = glyphStep(r1, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c3, c1, c2);
+    g.add(gs.getGroup());
+    BezRectangle r3 = gs.r1().boundsRect();
+    BezRectangle r4 = gs.r2().boundsRect();
+    gs = glyphStep(r3, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c0, c1, c2);
+    g.add(gs.getGroup());
+    BezRectangle r7 = gs.r1().boundsRect();
+    BezRectangle r8 = gs.r2().boundsRect();
+    gs = glyphStep(r4, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c0, c1, c2);
+    g.add(gs.getGroup());
+    BezRectangle r11 = gs.r1().boundsRect();
+    BezRectangle r12 = gs.r2().boundsRect();
+    gs = glyphStep(r7, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c4, c1, c2);
+    g.add(gs.getGroup());
+    gs = glyphStep(r8, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c4, c1, c2);
+    g.add(gs.getGroup());
+    gs = glyphStep(r11, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c4, c1, c2);
+    g.add(gs.getGroup());
+    gs = glyphStep(r12, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c4, c1, c2);
+    g.add(gs.getGroup());
+    //
+    gs = glyphStep(r2, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c3, c1, c2);
+    g.add(gs.getGroup());
+    BezRectangle r5 = gs.r1().boundsRect();
+    BezRectangle r6 = gs.r2().boundsRect();
+    gs = glyphStep(r5, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c0, c1, c2);
+    g.add(gs.getGroup());
+    BezRectangle r9 = gs.r1().boundsRect();
+    BezRectangle r10 = gs.r2().boundsRect();
+    gs = glyphStep(r6, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c0, c1, c2);
+    g.add(gs.getGroup());
+    BezRectangle r13 = gs.r1().boundsRect();
+    BezRectangle r14 = gs.r2().boundsRect();
+    gs = glyphStep(r9, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c4, c1, c2);
+    g.add(gs.getGroup());
+    gs = glyphStep(r10, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c4, c1, c2);
+    g.add(gs.getGroup());
+    gs = glyphStep(r13, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c4, c1, c2);
+    g.add(gs.getGroup());
+    gs = glyphStep(r14, nextGlyph(glit), gen);
+    gs.setNoStroke();
+    gs.setFillColors(c4, c1, c2);
+    g.add(gs.getGroup());
+  }
   //
   return g;
 }
 
+public Iterator<Glyph> glyphIter() {
+  ArrayList<Glyph> glyphList = new ArrayList<Glyph>();
+  for (Glyph glyph : Glyph.values()) {
+    glyphList.add(glyph);
+  }
+  // randomize the order of glyphs
+  rand.shuffle((ArrayList)glyphList);
+  return glyphList.iterator();
+}
 
+public Glyph nextGlyph(Iterator<Glyph> glit) {
+  if (glit.hasNext()) { 
+    return glit.next();
+  }
+  else {
+    glit = glyphIter();
+    return glit.next();
+  }
+}
 
+/**/
+// non-recursive version
+public GlyphShape glyphStep(BezRectangle r, Glyph glyph, GlyphGenerator gen) {
+  float x = r.getLeft();
+  float y = r.getTop();
+  float w = r.getWidth();
+  float h = r.getHeight();
+  float u = w <= h ? w/5 : h/5;
+  u = border;
+  gen.regenerate(x, y, w, h, u);
+  boolean r90 = GeomUtils.zsgn(w - h) != glyph.zsign();
+  GlyphShape gs = gen.getGlyph(glyph, r90);
+  if (random(1) > 0.5) gs.rotate180();
+  if (random(1) > 0.5) gs.flipV();
+  return gs;
+}
+/**/
 
+/**/
+public ArrayList<GlyphShape> reGlyphStep(GlyphShape gs, Glyph glyph, GlyphGenerator gen, ArrayList<GlyphShape> gsList, int depth) {
+  if (depth > 0) {
+    GlyphShape gs1 = glyphStep(gs.r1().boundsRect(), glyph, gen);
+    gsList.add(gs1);
+    reGlyphStep(gs1, glyph, gen, gsList, depth - 1);
+    GlyphShape gs2 = glyphStep(gs.r2().boundsRect(), glyph, gen);
+    reGlyphStep(gs2, glyph, gen, gsList, depth - 1);
+  } 
+  return gsList;
+}
+/**/
 
 /**
  * Saves geometry as an Adobe Illustrator 7.0 file, an old text-based PostScript format 

@@ -225,6 +225,10 @@ public class GlyphShape {
   public GroupComponent getGroup() {
     return this.g;
   }
+  
+  public Glyph getGlyph() {
+    return this.glyph;
+  }
 
   public BezRectangle r0() {
     return this.r0;
