@@ -123,6 +123,7 @@ public void setupGeometry() {
    + "And sank in tumult to a lifeless ocean; And ’mid this tumult Kubla heard from far Ancestral voices prophesying war!";
    */
   // msg = "Happy Birthday";
+  msg = "APLACEWHEREWECANWEEP";
   println("\nMessage:\n"+ msg +"\n");
   messageGroup = loadMessageJustified(msg);
 }
@@ -145,11 +146,11 @@ public void showHelp() {
 
 public void draw() {
   background(255);
-  alphaGroup.hide();
-  messageGroup.hide();
-  // alphaGroup.draw();
-  // messageGroup.draw();
-  glyphGroup.draw();
+  //alphaGroup.hide();
+  //messageGroup.hide();
+  alphaGroup.draw();
+  messageGroup.draw();
+  //glyphGroup.draw();
 }
 
 
@@ -301,13 +302,13 @@ public GroupComponent loadMessageJustified(String mess) {
   String[] words = mess.toUpperCase().split(" ");
   float startX = 32;
   float startY = 32;
-  float scaleXY = sxy * 0.5;
+  float scaleXY = sxy * 3;
   float tx = startX;
   float xinc = scaleXY * 7.25;
   float ty = startY;
   float yinc = scaleXY * 7.25;
   // letters per line
-  int breakWord = 22;
+  int breakWord = 5;
   int charCount = 0;
   GroupComponent g;
   GroupComponent messGroup = new GroupComponent();
