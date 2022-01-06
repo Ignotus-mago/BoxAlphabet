@@ -123,7 +123,7 @@ public void setupGeometry() {
    + "And sank in tumult to a lifeless ocean; And ’mid this tumult Kubla heard from far Ancestral voices prophesying war!";
    */
   // msg = "Happy Birthday";
-  msg = "APLACEWHEREWECANWEEP";
+  msg = "nothing happens";
   println("\nMessage:\n"+ msg +"\n");
   messageGroup = loadMessageJustified(msg);
 }
@@ -148,7 +148,7 @@ public void draw() {
   background(255);
   //alphaGroup.hide();
   //messageGroup.hide();
-  alphaGroup.draw();
+  //alphaGroup.draw();
   messageGroup.draw();
   //glyphGroup.draw();
 }
@@ -304,11 +304,11 @@ public GroupComponent loadMessageJustified(String mess) {
   float startY = 32;
   float scaleXY = sxy * 3;
   float tx = startX;
-  float xinc = scaleXY * 7.25;
+  float xinc = scaleXY * 7.0;
   float ty = startY;
-  float yinc = scaleXY * 7.25;
+  float yinc = scaleXY * 7.0;
   // letters per line
-  int breakWord = 5;
+  int breakWord = 4;
   int charCount = 0;
   GroupComponent g;
   GroupComponent messGroup = new GroupComponent();
