@@ -33,6 +33,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import processing.pdf.*;
+import processing.svg.*;
+
 
 HashMap<String, IntList> boxList;
 color backgroundColor = color(144, 157, 186);
@@ -100,6 +102,7 @@ public void showHelp() {
   println("----->>> Press spacebar to swap display.              <<<-----");
   println("----->>> Press 's' to save to Adobe Illustrator file. <<<-----");
   println("----->>> Press 'p' to save to PDF file.               <<<-----");
+  println("----->>> Press 'v' to save to SVG file.               <<<-----");
 }
 
 
@@ -127,6 +130,10 @@ public void keyPressed() {
   else if (key == 'p' || key == 'P') {
     println("----->>> SAVING PDF");
     savePDF("message+alphabet.pdf");
+  }
+  else if (key == 'v' || key == 'V') {
+    println("----->>> SAVING SVG");
+    saveSVG("message+alphabet.svg");
   }
 }
 
@@ -318,6 +325,7 @@ public GroupComponent loadChar(IntList letter, float scaleXY, float tx, float ty
  * that still opens in current version of Illustrator. 
  *
  * The alphabet (alphaGroup) and message (messageGroup) are placed in separate layers. 
+ * All groups we created will show up in Adobe Illustrator.
  */
 private void saveAI(String aiFileName) {
   document = new DocumentComponent("Boxy Alphabet");
@@ -354,14 +362,41 @@ private void saveAI(String aiFileName) {
 private void savePDF(String pdfFileName) {
   beginRecord(PDF, pdfFileName);
   // make sure everything is visible, otherwise it won't draw.
+  // PDF file format will not store our layer and group information, so let's omit alphaGroup.
+  /*
   boolean alphaIsVisible = alphaGroup.isVisible();
   alphaGroup.show();
   alphaGroup.draw();
+  // restore visibility setting
+  alphaGroup.setVisible(alphaIsVisible);
+  */
   boolean messageIsVisible = messageGroup.isVisible();
   messageGroup.show();
   messageGroup.draw(); 
-  // restore visibility settings
+  // restore visibility setting
+  messageGroup.setVisible(messageIsVisible);
+  endRecord();
+}
+
+/**
+ * Saves geometry to a SVG file. It's pretty simple to do: just call beginRecord(), call draw() 
+ * for the top-level element or elements in the display graph, and then call endRecord(). 
+ */
+private void saveSVG(String svgFileName) {
+  beginRecord(SVG, svgFileName);
+  // make sure everything is visible, otherwise it won't draw.
+  // because the SVG format flattens our layers and groups, let's just omit drawing the alphaGroup
+  /*
+  boolean alphaIsVisible = alphaGroup.isVisible();
+  alphaGroup.hide();
+  alphaGroup.draw();
+  // restore visibility setting
   alphaGroup.setVisible(alphaIsVisible);
+  */
+  boolean messageIsVisible = messageGroup.isVisible();
+  messageGroup.show();
+  messageGroup.draw(); 
+  // restore visibility setting
   messageGroup.setVisible(messageIsVisible);
   endRecord();
 }
