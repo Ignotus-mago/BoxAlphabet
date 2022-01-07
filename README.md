@@ -1,5 +1,5 @@
 # BoxAlphabet
- A minimalist all-caps alphabet to use with IgnoCodeLib. Outputs to Adobe Illustrator, PDF, and SVG file format. The .ai file includes groups and layers.
+ A minimalist all-caps graphic alphabet to use with IgnoCodeLib. Outputs to Adobe Illustrator, PDF, and SVG file format. The .ai file includes groups and layers.
 
 Sample AI, SVG and PDF files are included to show you what output looks like.
 
