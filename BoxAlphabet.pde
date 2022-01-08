@@ -325,7 +325,8 @@ public GroupComponent loadChar(IntList letter, float scaleXY, float tx, float ty
  * that still opens in current version of Illustrator. 
  *
  * The alphabet (alphaGroup) and message (messageGroup) are placed in separate layers. 
- * All groups we created will show up in Adobe Illustrator.
+ * The layers and all groups we created will show up in Adobe Illustrator. That's the 
+ * convenience of using IgnoCodeLIb to output to AI.
  */
 private void saveAI(String aiFileName) {
   document = new DocumentComponent("Boxy Alphabet");
@@ -362,7 +363,7 @@ private void saveAI(String aiFileName) {
 private void savePDF(String pdfFileName) {
   beginRecord(PDF, pdfFileName);
   // make sure everything is visible, otherwise it won't draw.
-  // PDF file format will not store our layer and group information, so let's omit alphaGroup.
+  // PDF file format will won't output our groups, making a real flat jumble, so let's omit alphaGroup.
   /*
   boolean alphaIsVisible = alphaGroup.isVisible();
   alphaGroup.show();
@@ -385,7 +386,7 @@ private void savePDF(String pdfFileName) {
 private void saveSVG(String svgFileName) {
   beginRecord(SVG, svgFileName);
   // make sure everything is visible, otherwise it won't draw.
-  // because the SVG format flattens our layers and groups, let's just omit drawing the alphaGroup
+  // SVG file format will won't output our groups, making a real flat jumble, so let's omit alphaGroup.
   /*
   boolean alphaIsVisible = alphaGroup.isVisible();
   alphaGroup.hide();
