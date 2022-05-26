@@ -31,7 +31,7 @@ public void initBoxAlpha() {
   boxList.put("U", new IntList(0, 0, 7, 7, 1, 0, 5, 6));
   boxList.put("V", new IntList(0, 0, 7, 7, 0, 1, 1, 6, 2, 0, 4, 6));
   boxList.put("W", new IntList(0, 0, 7, 7, 1, 0, 2, 6, 4, 0, 2, 6));
-  boxList.put("X", new IntList(0, 0, 7, 7, 0, 0, 3, 6, 4, 1, 3, 6));
+  boxList.put("X", new IntList(0, 0, 7, 7, 1, 0, 6, 3, 0, 4, 6, 3));
   boxList.put("Y", new IntList(0, 0, 7, 7, 1, 0, 5, 3, 0, 4, 6, 2));
   boxList.put("Z", new IntList(0, 0, 7, 7, 0, 1, 3, 6, 4, 0, 3, 6));
   boxList.put(" ", new IntList(0, 0, 7, 7, 0, 0, 7, 7));

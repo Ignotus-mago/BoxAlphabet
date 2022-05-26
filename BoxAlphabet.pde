@@ -123,7 +123,11 @@ public void setupGeometry() {
    + "And sank in tumult to a lifeless ocean; And ’mid this tumult Kubla heard from far Ancestral voices prophesying war!";
    */
   // msg = "Happy Birthday";
-  msg = "nothing happens";
+  // msg = "nothing happens";
+  // msg = "Rhizome azimuth showbiz chorizo scherzo hazards schmalz horizon";
+  // msg = "absinthe blowjobs curbside dumbshit mobsters proverbs subsonic taxicabs"; 
+  // msg = "StrategicRareEarthMetals";
+  msg = "enhancedInterrogation";
   println("\nMessage:\n"+ msg +"\n");
   messageGroup = loadMessageJustified(msg);
 }
@@ -299,16 +303,18 @@ public GroupComponent loadMessageJustified(String mess) {
   int[] mid = {110, 123, 144, 157, 165, 178};
   int[] light = {178, 186, 199, 220, 233};
   int[] colorValues = {21, 34, 47, 55, 76, 89, 178, 186, 199, 220, 233};
+  alphaForeColor1 = color(8, 13, 21);
+  alphaForeColor2 = color(89, 97, 110);
   String[] words = mess.toUpperCase().split(" ");
   float startX = 32;
   float startY = 32;
-  float scaleXY = sxy * 3;
+  float scaleXY = sxy * 2.5;
   float tx = startX;
   float xinc = scaleXY * 7.0;
   float ty = startY;
   float yinc = scaleXY * 7.0;
   // letters per line
-  int breakWord = 4;
+  int breakWord = 7;
   int charCount = 0;
   GroupComponent g;
   GroupComponent messGroup = new GroupComponent();
@@ -333,7 +339,7 @@ public GroupComponent loadMessageJustified(String mess) {
     if (' ' == buf.charAt(i)) {
       c1 = spaceColor2;
     } else {
-      c1 = i % 2 == 0 ? Palette.randColor(light) : Palette.randColor(mid);
+      c1 = i % 2 == 0 ? Palette.randColor(light) : Palette.randColor(light);
       //c1 = cNext;
       //cNext = Palette.randColor(colorValues);
     }
